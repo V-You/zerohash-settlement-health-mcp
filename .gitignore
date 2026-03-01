@@ -1,5 +1,8 @@
 # user
-*PRD.md
+PRD*.md
+NOTES.md
+
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -157,6 +160,3 @@ cython_debug/
 
 # VS Code
 .vscode/
-
-# Project specific
-NOTES.md

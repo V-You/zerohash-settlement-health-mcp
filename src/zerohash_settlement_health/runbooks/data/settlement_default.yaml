@@ -1,0 +1,22 @@
+id: settlement_default
+title: "Settlement Default"
+severity: CRITICAL
+trigger:
+  trade_state: terminated
+  settlement_state: defaulted
+description: >
+  One of the parties has defaulted on their settlement obligations.
+  The trade has been terminated but settlement did not complete
+  successfully. This is a critical issue requiring immediate escalation.
+diagnosis_steps:
+  - "Identify the defaulting party from the trade details."
+  - "Review the trade history and timeline for the defaulting party."
+  - "Check if the default is due to insufficient funds, missed deadline, or system error."
+remediation:
+  - "Immediately escalate to the settlement operations team."
+  - "Notify the platform operator about the default event."
+  - "If system error: File an incident report and check for retry eligibility."
+  - "Document the default in the incident tracking system."
+api_references:
+  - "GET /trades/:trade_id"
+  - "GET /accounts"

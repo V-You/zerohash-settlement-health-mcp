@@ -1,0 +1,24 @@
+id: counterparty_default
+title: "Counterparty Default"
+severity: CRITICAL
+trigger:
+  trade_state: terminated
+  settlement_state: counterparty_defaulted
+description: >
+  The counterparty has defaulted on their settlement obligations.
+  The trade has been terminated but the counterparty failed to
+  fulfill their side of the trade. Zero Hash's DVP (Delivery versus
+  Payment) mechanism should prevent asset loss, but immediate review
+  is required.
+diagnosis_steps:
+  - "Confirm the counterparty identity from the trade details."
+  - "Verify that DVP protections were applied (no asset transferred without payment)."
+  - "Check the counterparty's account status and recent activity."
+remediation:
+  - "Immediately escalate to the settlement operations team."
+  - "Verify DVP protections held — confirm no unilateral asset transfer occurred."
+  - "Contact the counterparty's platform operator for resolution."
+  - "Document the default and initiate the dispute resolution process."
+api_references:
+  - "GET /trades/:trade_id"
+  - "GET /accounts"

@@ -1,0 +1,22 @@
+id: insufficient_liquidity
+title: "Insufficient Liquidity for Settlement"
+severity: HIGH
+trigger:
+  trade_state: active
+  settlement_state: obligations_outstanding
+description: >
+  The participant's sub-account does not have sufficient balance to meet
+  settlement obligations. This typically occurs when a trade is executed
+  but the corresponding fiat or crypto deposit has not yet been credited.
+diagnosis_steps:
+  - "Query account balance for the participant using check_account_balance."
+  - "Compare available_balance against the trade's settlement obligation amount."
+  - "Check if there are pending deposits that have not yet been credited."
+remediation:
+  - "If balance is insufficient: Trigger rebalance via POST /accounts/rebalance (manual action required)."
+  - "If deposit is pending: Wait for deposit confirmation and re-check."
+  - "If no pending deposits: Escalate to the platform operator for manual funding."
+api_references:
+  - "GET /accounts"
+  - "POST /accounts/rebalance"
+  - "GET /deposits/digital_asset_addresses"

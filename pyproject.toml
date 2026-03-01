@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "zerohash-settlement-health-mcp"
+version = "0.1.0"
+description = "MCP server for diagnosing Zero Hash settlement health"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = [
+    "fastmcp>=3.0",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+]
+
+[project.scripts]
+zerohash-settlement-health = "zerohash_settlement_health.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/zerohash_settlement_health"]

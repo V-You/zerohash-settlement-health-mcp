@@ -1,0 +1,21 @@
+id: stale_trade
+title: "Stale Trade — Pending Settlement"
+severity: MEDIUM
+trigger:
+  trade_state: active
+  settlement_state: current_obligations_met
+description: >
+  The trade is active and current obligations have been met, but
+  settlement has not yet finalized. This may indicate the trade is
+  waiting for the settlement cycle to complete, or there may be
+  a processing delay. In most cases this resolves automatically.
+diagnosis_steps:
+  - "Check the trade timestamps to determine how long it has been in this state."
+  - "Verify that the trade was submitted correctly by reviewing the trade payload."
+  - "Check if there are any system-wide delays or ongoing incidents."
+remediation:
+  - "If recent (< 30 min): Monitor — this is normal settlement processing time."
+  - "If older (> 30 min): Check for system-wide settlement delays."
+  - "If persistent (> 2 hours): Escalate to the settlement operations team for manual review."
+api_references:
+  - "GET /trades/:trade_id"

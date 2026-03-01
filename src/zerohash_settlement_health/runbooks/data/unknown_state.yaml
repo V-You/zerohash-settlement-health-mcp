@@ -1,0 +1,23 @@
+id: unknown_state
+title: "Unknown or Unexpected State Combination"
+severity: HIGH
+trigger:
+  trade_state: "*"
+  settlement_state: "*"
+description: >
+  The trade is in an unexpected combination of trade_state and
+  settlement_state that does not match any known diagnostic pattern.
+  This may indicate a data inconsistency, API schema change, or
+  an edge case not covered by current runbooks.
+diagnosis_steps:
+  - "Record the exact trade_state and settlement_state values."
+  - "Check if this combination is documented in the Zero Hash API changelog."
+  - "Inspect the full trade payload using lookup_trade for additional context."
+  - "Compare with recent trades from the same participant for patterns."
+remediation:
+  - "Escalate to the engineering team with the full trade payload."
+  - "File a bug report if this appears to be a data inconsistency."
+  - "If recurring: Request a runbook update to cover this state combination."
+api_references:
+  - "GET /trades/:trade_id"
+  - "GET /accounts"
