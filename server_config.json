@@ -1,0 +1,19 @@
+{
+  "_comment": "mcp-cli server config. Use the 'local' server for development, 'remote' for zero-footprint distribution.",
+  "mcpServers": {
+    "zerohash-settlement-health": {
+      "_comment": "Local dev: runs the installed entry point from this project's venv via uv run.",
+      "command": "uv",
+      "args": ["run", "zerohash-settlement-health"]
+    },
+    "zerohash-settlement-health-remote": {
+      "_comment": "Remote/zero-footprint: pulls and runs directly from GitHub via uvx. No local clone needed.",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/V-You/zerohash-settlement-health-mcp",
+        "zerohash-settlement-health"
+      ]
+    }
+  }
+}
