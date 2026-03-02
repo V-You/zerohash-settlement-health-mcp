@@ -42,15 +42,14 @@ fastmcp dev inspector src/zerohash_settlement_health/server.py
 # Terminal Chat with LLM — mcp-cli
 
 ```bash
-# Install mcp-cli
+# Install mcp-cli (one-time, into the project venv)
 pip install mcp-cli
-# or zero-footprint: uvx mcp-cli
 
-# Set ONE free-tier LLM provider key (see .env.example for all options)
-export GROQ_API_KEY=your_key_here   # Groq: generous free tier, very fast
+# Export API keys from .env into the current shell session
+set -a; source .env; set +a
 
-# Start interactive chat (uses server_config.json in this directory)
-mcp-cli chat --config server_config.json --server zerohash-settlement-health --provider groq
+# Start interactive chat (server_config.json is the default config file)
+mcp-cli chat --config-file server_config.json --server zerohash-settlement-health --provider groq
 
 # Example queries:
 # "Check the settlement health for trade trade_002"
@@ -58,6 +57,8 @@ mcp-cli chat --config server_config.json --server zerohash-settlement-health --p
 ```
 
 Supported providers: `groq`, `gemini`, `openai`, `anthropic`, `ollama`.
+
+> **Keys:** Add your `GROQ_API_KEY` (or `OPENROUTER_API_KEY`) to `.env`. Run `set -a; source .env; set +a` once per shell session before chatting. `mcp-cli` does not auto-load `.env`.
 
 
 # Distribute — zero footprint
@@ -68,8 +69,12 @@ To share with a teammate who doesn't have the repo:
 # Install mcp-cli (one-time)
 pip install mcp-cli
 
-# Edit server_config.json to use the remote (uvx) command variant, then:
-mcp-cli chat --config server_config.json --server zerohash-settlement-health --provider groq
+# Copy server_config.json to your working directory
+# Edit it to use the "zerohash-settlement-health-remote" server entry (uvx variant)
+
+# Export your LLM key, then chat:
+export GROQ_API_KEY=your_key_here
+mcp-cli chat --config-file server_config.json --server zerohash-settlement-health-remote --provider groq
 ```
 
 See `server_config.json` in this repo for the local dev and remote (uvx from GitHub) config variants.

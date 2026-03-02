@@ -8,6 +8,12 @@ from __future__ import annotations
 
 import json
 import logging
+import warnings
+
+# Suppress RequestsDependencyWarning caused by mcp-cli pulling in
+# urllib3/chardet versions newer than requests' internal compat check.
+# The warning is cosmetic — requests works fine with these versions.
+warnings.filterwarnings("ignore", message="urllib3.*or chardet.*doesn't match")
 from typing import Optional
 
 from fastmcp import FastMCP
