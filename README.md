@@ -4,7 +4,7 @@ This is an MCP server for the command line. It takes a **trade\_id**, queries th
 
 | mcp-cli: *Check trade_002*  | Non-LLM Trade ID query <br> and pretty query | uv run fastmcp <br>dev inspector  |
 | :---: | :---: | :---: |
-| <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008.png" width="99px" /></kbd><br><kbd><img src="img/Screenshot_2026-03-02_221321.png" width="99px" /></kbd> | 
+| <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008_.png" width="99px" /></kbd> | 
 
 The MCP server encodes zerohash's settlement logic and API runbooks. A technical support engineer (TSE) can diagnose 'Trade & Transact' issues in seconds, directly in the terminal where they are already viewing logs. Using [mcp-cli](https://github.com/IBM/mcp-cli) for interactive LLM-powered chat, or `fastmcp` for instant tool invocation with no setup required. Advantages:
 
