@@ -62,7 +62,7 @@ Example queries:
 - "Check the settlement health for trade trade_002"
 - "Look up trade_005 and check the account balance for its participant"
 
-Supported providers: groq, gemini, openai, anthropic, ollama. **Keys:** Add GROQ_API_KEY or OPENROUTER_API_KEY to the `.env` file. Run `set -a; source .env; set +a` once per shell session. The `mcp-cli` command does not auto-load `.env`.
+Supported providers: groq, gemini, openai, anthropic, ollama. **Keys:** Add GROQ_API_KEY or OPENROUTER_API_KEY to the `.env` file. Run `set -a; source .env; set +a` once per shell session (.env file is not auto-loaded).
 
 **Mock trade IDs:** 
 - `trade_001` (healthy)
