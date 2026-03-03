@@ -12,7 +12,7 @@ The MCP server encodes zerohash's settlement logic and API runbooks. A technical
 
 # Quick demo (no LLM)
 
-Requires: Python 3.10+, [uv](https://docs.astral.sh/uv/)
+Requires: Python 3.11+, [uv](https://docs.astral.sh/uv/)
 
 ```bash
 # 1. Clone and install
