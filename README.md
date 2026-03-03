@@ -2,9 +2,9 @@
 
 This is an MCP server for the command line. It takes a **trade\_id**, queries the (mocked) Zero Hash API, and performs a *pre-flight* or a *post-mortem* check. It shows the JSON response, and maps the trade state to a Runbook. Example: "Trade defaulted. Action: Escalate to the settlement operations team and file an incident report. 
 
-| `./zh`  | Non-LLM Trade ID query <br> and pretty query | uv run fastmcp <br>dev inspector  |
+| mcp-cli: Check trade_002  | Non-LLM Trade ID query <br> and pretty query | uv run fastmcp <br>dev inspector  |
 | :---: | :----: | :----: |
-| <kbd><img src="img/Screenshot_2026-03-02_221008.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008.png" width="99px" /></kbd><br><kbd><img src="img/Screenshot_2026-03-02_221321.png" width="99px" /></kbd> | 
+| <kbd><img src="Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008.png" width="99px" /></kbd><br><kbd><img src="img/Screenshot_2026-03-02_221321.png" width="99px" /></kbd> | 
 
 The MCP server encodes zerohash's settlement logic and API runbooks. A technical support engineer (TSE) can diagnose 'Trade & Transact' issues in seconds, directly in the terminal where they are already viewing logs. Using [mcp-cli](https://github.com/IBM/mcp-cli) for interactive LLM-powered chat, or `fastmcp` for instant tool invocation with no setup required. Advantages:
 
@@ -48,16 +48,17 @@ uv run fastmcp dev inspector src/zerohash_settlement_health/server.py
 ## LLM chat (mcp-cli)
 
 ```bash
+# Copy .env to project folder
 # Export API keys from .env into the current shell session
 set -a; source .env; set +a
 
 # Start interactive chat
-uv run mcp-cli chat --config-file server_config.json --server zerohash-settlement-health --provider groq
+uv run --with mcp-cli mcp-cli chat --config-file server_config.json --server zerohash-settlement-health --provider groq
 ```
 
 Example queries:
-- "Check the settlement health for trade trade\_002"
-- "Look up trade\_005 and check the account balance for its participant"
+- "Check the settlement health for trade trade_002"
+- "Look up trade_005 and check the account balance for its participant"
 
 Supported providers: groq, gemini, openai, anthropic, ollama. **Keys:** Add GROQ_API_KEY or OPENROUTER_API_KEY to the `.env` file. Run `set -a; source .env; set +a` once per shell session. The `mcp-cli` command does not auto-load `.env`.
 
