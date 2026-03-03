@@ -1,14 +1,10 @@
 # zerohash Settlement Health MCP
 
-This is an MCP server for the command line. It takes a **trade\_id**, queries the (mocked) Zero Hash API, and performs a *pre-flight* or a *post-mortem* check. It shows the JSON response, and maps the trade state to a Runbook. Example: "Trade defaulted. Action: Escalate to the settlement operations team and file an incident report. 
-
-<center>
+This is an MCP server for the command line. It takes a **trade\_id**, queries the (mocked) Zero Hash API, and performs a *pre-flight* or a *post-mortem* check. It shows the JSON response, and maps the trade state to a Runbook, <span style="color:darkgreen">example:</span> "Trade defaulted. Action: Escalate to the settlement operations team and file an incident report."
 
 | mcp-cli: *Check trade_002*  | Non-LLM Trade ID query <br> and pretty query | uv run fastmcp <br>dev inspector  |
 | :---: | :---: | :---: |
 | <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008_.png" width="99px" /></kbd> | 
-
-</center>
 
 The MCP server encodes zerohash's settlement logic and API runbooks. A technical support engineer (TSE) can diagnose 'Trade & Transact' issues in seconds, directly in the terminal where they are already viewing logs. Using [mcp-cli](https://github.com/IBM/mcp-cli) for interactive LLM-powered chat, or `fastmcp` for instant tool invocation with no setup required. Advantages:
 
