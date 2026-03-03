@@ -2,11 +2,13 @@
 
 This is an MCP server for the command line. It takes a **trade\_id**, queries the (mocked) Zero Hash API, and performs a *pre-flight* or a *post-mortem* check. It shows the JSON response, and maps the trade state to a Runbook, <strong>example:</strong> "Trade defaulted. Action: Escalate to the settlement operations team and file an incident report."
 
-| mcp-cli: *Check trade_002*  | Non-LLM Trade ID query <br> and pretty query | uv run fastmcp <br>dev inspector  |
+ The MCP server encodes zerohash's settlement logic and API runbooks. A technical support engineer (TSE) can diagnose 'Trade & Transact' issues in seconds, directly in the terminal where they are already viewing logs. Using [mcp-cli](https://github.com/IBM/mcp-cli) for interactive LLM-powered chat, or `fastmcp` for instant tool invocation with no setup required. 
+ 
+ | mcp-cli: *Check trade_002*  | Non-LLM Trade ID query <br> and pretty query | uv run fastmcp <br>dev inspector  |
 | :---: | :---: | :---: |
-| <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008_.png" width="99px" /></kbd> | 
-
-The MCP server encodes zerohash's settlement logic and API runbooks. A technical support engineer (TSE) can diagnose 'Trade & Transact' issues in seconds, directly in the terminal where they are already viewing logs. Using [mcp-cli](https://github.com/IBM/mcp-cli) for interactive LLM-powered chat, or `fastmcp` for instant tool invocation with no setup required. Advantages:
+| <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008_.png" width="99px" /></kbd> |
+ 
+ Advantages:
 
 * **Context is king:** TSEs shouldn't have to leave the terminal/command line to diagnose a [Settlement](https://zerohash.com/) failure. The tool lives where the logs are, allowing the TSE to pipe an error directly into a tool that interprets the zerohash settlement logic and suggests an action.
 * **Bridging the gap:** The tool moves the user from API docs that are "somewhere", to "Docs as Action". The TSE gets a tool that validates an API state against those docs.
