@@ -1,21 +1,16 @@
 # zerohash Settlement Health MCP
 
-**Pitch:** *The MCP server encodes zerohash's settlement logic and API runbooks. A support engineer can diagnose 'Trade & Transact' issues in seconds, directly in the terminal where they are already viewing logs — using [mcp-cli](https://github.com/IBM/mcp-cli) for interactive LLM-powered chat, or `fastmcp` for instant tool invocation with no setup required.*
+This is an MCP server for the command line. It takes a **trade\_id**, queries the (mocked) Zero Hash API, and performs a *pre-flight* or a *post-mortem* check. It shows the JSON response, and maps the trade state to a Runbook. Example: "Trade defaulted. Action: Escalate to the settlement operations team and file an incident report. 
 
-*This is an MCP server for terminal use that takes a trade\_id, queries the (mocked) Zero Hash API, and performs a "pre-flight" or "post-mortem" check. Instead of just showing raw JSON, the tool maps the trade state to a Runbook. For example: "Trade defaulted. Action: Escalate to the settlement operations team and file an incident report."*
+The MCP server encodes zerohash's settlement logic and API runbooks. A technical support engineer (TSE) can diagnose 'Trade & Transact' issues in seconds, directly in the terminal where they are already viewing logs. Using [mcp-cli](https://github.com/IBM/mcp-cli) for interactive LLM-powered chat, or `fastmcp` for instant tool invocation with no setup required. Advantages:
 
-*Pros:*
+* **Context is king:** TSEs shouldn't have to leave the terminal/command line to diagnose a [Settlement](https://zerohash.com/) failure. The tool lives where the logs are, allowing the TSE to pipe an error directly into a tool that interprets the zerohash settlement logic and suggests an action.
+* **Bridging the gap:** The tool moves the user from API docs that are "somewhere", to "Docs as Action". The TSE gets a tool that validates an API state against those docs.
+* **Direct tool execution:** `fastmcp call ... --target check_settlement_health trade_id=trade_002` — a one-liner that returns a structured diagnosis. Mimics interaction with a troubleshooting script during a prod incident.
+* **Chat for complex analysis:** Switch to `mcp-cli chat` for multi-step analysis: "Check settlement health for trade\_005 and then verify the participant's account balance" — the AI chains the applicable MCP tools and returns a unified answer.
+* **Multi-provider support:** `mcp-cli` supports Groq, Gemini, OpenAI, Anthropic, and Ollama — not locked into one model.
 
-* **Context is king:** Just as developers shouldn't have to leave their IDE, TSEs shouldn't have to leave the terminal/command line to diagnose a [Settlement](https://zerohash.com/) failure. The tool lives where the logs are, allowing the TSE to pipe an error directly into a tool that interprets the zerohash settlement logic and suggests an action.*
-* **Bridging the gap:** It moves the user from API docs that are "somewhere", to "Docs as Action". The user gets a tool that validates an API state against those docs.*
-* **Direct tool execution:** `fastmcp call ... --target check_settlement_health trade_id=trade_002` — a one-liner that returns a structured diagnosis. This is exactly how a TSE would interact with a troubleshooting script during a live incident.*
-* **Chat for complex analysis:** Switch to `mcp-cli chat` for multi-step analysis: "Check settlement health for trade\_005 and then verify the participant's account balance" — the AI chains the tools and returns a unified answer.*
-* **Multi-provider support:** `mcp-cli` supports Groq, Gemini, OpenAI, Anthropic, and Ollama — not locked into one model.*
-
-\------------------------------------------------
-
-
-# Quick Demo — no LLM, no API key needed
+# Quick demo (no LLM)
 
 Requires: Python 3.10+, [uv](https://docs.astral.sh/uv/)
 
@@ -26,30 +21,34 @@ cd zerohash-settlement-health-mcp
 uv sync
 
 # 2. List available tools
-fastmcp list src/zerohash_settlement_health/server.py
+uv run fastmcp list src/zerohash_settlement_health/server.py
 
 # 3. Call a tool directly — returns structured JSON diagnosis in the terminal
-fastmcp call src/zerohash_settlement_health/server.py \
+uv run fastmcp call src/zerohash_settlement_health/server.py \
   --target check_settlement_health trade_id=trade_002
 
 # 4. (Optional) Launch the web-based MCP Inspector for interactive use
-fastmcp dev inspector src/zerohash_settlement_health/server.py
+uv run fastmcp dev inspector src/zerohash_settlement_health/server.py
 ```
 
-**Mock trade IDs:** `trade_001` (healthy/settled), `trade_002` (defaulted/CRITICAL), `trade_003` (counterparty default), `trade_004`–`trade_008` (various states and severity levels).
+**Mock trade IDs:** 
+- `trade_001` (healthy/settled)
+- `trade_002` (defaulted/CRITICAL)
+- `trade_003` (counterparty default)
+- `trade_004`–`trade_008` (various states and severity levels)
 
 
 # Terminal Chat with LLM — mcp-cli
 
 ```bash
-# Install mcp-cli (one-time, into the project venv)
-pip install mcp-cli
+# Install dev dependencies (includes mcp-cli) — skip if you already ran uv sync --extra dev
+uv sync --extra dev
 
 # Export API keys from .env into the current shell session
 set -a; source .env; set +a
 
 # Start interactive chat (server_config.json is the default config file)
-mcp-cli chat --config-file server_config.json --server zerohash-settlement-health --provider groq
+uv run mcp-cli chat --config-file server_config.json --server zerohash-settlement-health --provider groq
 
 # Example queries:
 # "Check the settlement health for trade trade_002"
@@ -76,6 +75,8 @@ pip install mcp-cli
 export GROQ_API_KEY=your_key_here
 mcp-cli chat --config-file server_config.json --server zerohash-settlement-health-remote --provider groq
 ```
+
+> The Distribute path uses a standalone `pip install mcp-cli` since there is no project venv available.
 
 See `server_config.json` in this repo for the local dev and remote (uvx from GitHub) config variants.
 

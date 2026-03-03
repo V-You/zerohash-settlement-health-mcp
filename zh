@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# zh — convenience wrapper for zerohash settlement health tools.
+# Usage:
+#   ./zh health trade_002                     Pretty diagnosis
+#   ./zh health trade_002 PART_B              With balance enrichment
+#   ./zh balance PART_C                       Account balance
+#   ./zh balance PART_C BTC                   Single asset
+#   ./zh lookup trade_001                     Raw trade data
+#   ./zh json health trade_004                Raw JSON (pipe-friendly)
+
+set -euo pipefail
+SERVER="src/zerohash_settlement_health/server.py"
+
+_call() {
+  local result
+  result=$(fastmcp call "$SERVER" --target "$@" 2>/dev/null) || { echo '{"error_code":"CALL_FAILED","message":"fastmcp call failed. Check trade_id format (e.g. trade_001, not trade 001)."}'; return; }
+  echo "$result" | jq -r '.result' 2>/dev/null || echo '{"error_code":"PARSE_ERROR","message":"Unexpected response from server."}'
+}
+
+_pretty_health() {
+  local json="$1"
+  python3 -c "
+import sys, json
+d = json.loads(sys.argv[1])
+if 'error_code' in d:
+    print(f\"\n\033[91mError:\033[0m {d['error_code']} — {d['message']}\")
+    sys.exit(1)
+C = {'CRITICAL':'\033[91m','HIGH':'\033[93m','MEDIUM':'\033[33m','LOW':'\033[36m','INFO':'\033[32m'}
+R = '\033[0m'
+c = C.get(d.get('severity',''),'')
+print(f\"\n{'═'*60}\")
+print(f\"  {c}{d['severity']}{R}  {d['status']}  —  {d['trade_id']}\")
+print(f\"{'═'*60}\")
+print(f\"  State:       {d['trade_state']} / {d['settlement_state']}\")
+print(f\"  Participant: {d['participant_code']}\")
+print(f\"{'─'*60}\")
+print(f\"  Diagnosis:\")
+for s in d['diagnosis'].split('. '):
+    s = s.strip().rstrip('.')
+    if s: print(f\"    • {s}.\")
+print(f\"{'─'*60}\")
+print(f\"  Action:\")
+for s in d['action'].split('. '):
+    s = s.strip().rstrip('.')
+    if s: print(f\"    → {s}.\")
+if d.get('runbook_ref'):
+    print(f\"{'─'*60}\")
+    print(f\"  Runbook: {d['runbook_ref']}\")
+print(f\"{'═'*60}\n\")
+" "$json"
+}
+
+_pretty_balance() {
+  local json="$1"
+  python3 -c "
+import sys, json
+d = json.loads(sys.argv[1])
+if 'error_code' in d:
+    print(f\"\n\033[91mError:\033[0m {d['error_code']} — {d['message']}\")
+    sys.exit(1)
+R = '\033[0m'; B = '\033[1m'; G = '\033[32m'; Y = '\033[93m'
+print(f\"\n{'═'*60}\")
+print(f\"  Account Balance — {B}{d['participant_code']}{R}\")
+print(f\"{'═'*60}\")
+for a in d.get('accounts', []):
+    avail = float(a['available_balance'])
+    color = G if avail > 0 else Y
+    print(f\"  {a['asset']:>5}  balance: {a['balance']:>16}  available: {color}{a['available_balance']:>16}{R}\")
+print(f\"{'═'*60}\n\")
+" "$json"
+}
+
+_pretty_trade() {
+  local json="$1"
+  echo "$json" | jq .
+}
+
+# --- Main ---
+MODE="pretty"
+if [[ "${1:-}" == "json" ]]; then MODE="json"; shift; fi
+
+CMD="${1:-help}"
+shift || true
+
+case "$CMD" in
+  health|h)
+    ARGS="trade_id=${1:?Usage: zh health <trade_id> [participant_code]}"
+    [[ -n "${2:-}" ]] && ARGS="$ARGS participant_code=$2"
+    RESULT=$(_call check_settlement_health $ARGS)
+    [[ "$MODE" == "json" ]] && echo "$RESULT" | jq . || _pretty_health "$RESULT"
+    ;;
+  balance|b)
+    ARGS="participant_code=${1:?Usage: zh balance <participant_code> [asset]}"
+    [[ -n "${2:-}" ]] && ARGS="$ARGS asset=$2"
+    RESULT=$(_call check_account_balance $ARGS)
+    [[ "$MODE" == "json" ]] && echo "$RESULT" | jq . || _pretty_balance "$RESULT"
+    ;;
+  lookup|l)
+    RESULT=$(_call lookup_trade "trade_id=${1:?Usage: zh lookup <trade_id>}")
+    [[ "$MODE" == "json" ]] && echo "$RESULT" | jq . || _pretty_trade "$RESULT"
+    ;;
+  *)
+    echo "Usage: zh [json] <command> <args>"
+    echo ""
+    echo "Commands:"
+    echo "  health <trade_id> [participant]   Settlement health diagnosis"
+    echo "  balance <participant> [asset]      Account balance"
+    echo "  lookup <trade_id>                  Raw trade data"
+    echo ""
+    echo "Prefix 'json' for raw JSON: zh json health trade_002"
+    ;;
+esac
