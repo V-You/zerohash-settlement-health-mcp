@@ -66,6 +66,13 @@ set -a; source .env; set +a
 
 # Start interactive chat
 uv run --with mcp-cli mcp-cli chat --config-file server_config.json --server zerohash-settlement-health --provider groq
+
+# OR: Start interactive chat (different provider)
+uv run --with mcp-cli mcp-cli chat --config-file server_config.json \
+  --server zerohash-settlement-health --provider openai \
+  --api-base https://openrouter.ai/api/v1 \
+  --api-key "$OPENAI_API_KEY" \
+  --model meta-llama/llama-3.3-70b-instruct
 ```
 
 Example queries:
