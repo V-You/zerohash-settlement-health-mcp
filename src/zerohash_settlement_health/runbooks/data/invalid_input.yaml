@@ -1,0 +1,28 @@
+id: invalid_input
+title: "Invalid Client Input"
+severity: LOW
+trigger:
+  status_codes: [400]
+category: CLIENT_SIDE
+description: >
+  The client's request payload contains a malformed or invalid field.
+  The API validated the request and rejected it before processing.
+  This is a client-side integration error, not a server issue.
+diagnosis_steps:
+  - "Identify which field failed validation from the error message."
+  - "Check the API docs for the correct schema and field types."
+  - "Verify whether the client recently changed their integration."
+  - "Check if multiple clients are making the same mistake."
+remediation:
+  - "Contact the client with the expected format and a link to the API docs."
+  - "If multiple clients are affected, review API docs for clarity."
+  - "Confirm the client has resolved the issue after notifying them."
+escalation_path: "Client (quote docs)"
+api_references:
+  - "POST /withdrawals"
+  - "POST /liquidity/rfq"
+draft_response_template: >
+  Hi {client_id}, your {endpoint} request at {timestamp} UTC was
+  rejected due to a validation error in the request payload. Please
+  review the field types in our API reference and correct the request.
+  Let us know if you need further assistance.

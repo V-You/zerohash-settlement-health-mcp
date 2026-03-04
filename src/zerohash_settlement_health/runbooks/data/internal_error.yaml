@@ -1,0 +1,26 @@
+id: internal_error
+title: "Internal Server Error"
+severity: CRITICAL
+trigger:
+  status_codes: [500]
+category: SERVER_SIDE
+description: >
+  An unhandled error occurred on the server side. The client's request
+  may have been valid but the server failed to process it. This
+  requires immediate investigation and escalation to Engineering.
+diagnosis_steps:
+  - "Check server logs for stack traces or error details around the timestamp."
+  - "Determine if this is an isolated incident or affecting multiple clients."
+  - "Check recent deployments or configuration changes."
+  - "Verify downstream dependencies (database, message queue, etc.)."
+remediation:
+  - "Immediately escalate to Engineering with the timestamp and error details."
+  - "If ongoing, prepare a status update for affected clients."
+  - "Once resolved, perform root cause analysis and document findings."
+escalation_path: "Engineering"
+api_references: []
+draft_response_template: >
+  Hi {client_id}, we identified a server-side issue at {timestamp} UTC
+  that affected your {endpoint} request. Our engineering team has been
+  notified and is investigating. We will provide an update once the
+  issue is resolved. No action is needed on your side.

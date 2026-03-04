@@ -31,6 +31,9 @@ from zerohash_settlement_health.tools.check_account_balance import (
 from zerohash_settlement_health.tools.check_settlement_health import (
     check_settlement_health as _check_settlement_health,
 )
+from zerohash_settlement_health.tools.diagnose_errors import (
+    diagnose_errors as _diagnose_errors,
+)
 from zerohash_settlement_health.tools.get_market_prices import (
     get_market_prices as _get_market_prices,
 )
@@ -133,6 +136,27 @@ def get_market_prices(
     """
     result = _get_market_prices(assets, vs_currency, _settings.market_price_error_log)
     return json.dumps(result, indent=2)
+
+
+@mcp.tool
+def diagnose_errors(
+    log_text: Optional[str] = None,
+    file_path: Optional[str] = None,
+) -> str:
+    """Parse API error logs, classify incidents, and match runbooks.
+
+    Analyzes log lines in [HH:MM:SS] LEVEL: message format. Groups entries
+    into incidents by (client_id, endpoint) within a 2-second window.
+    Each incident is classified as CLIENT_SIDE, SERVER_SIDE, or UNKNOWN,
+    matched to a runbook, and returned with a draft response template.
+
+    Args:
+        log_text: Raw log text (pasted or piped).
+        file_path: Relative path to a .log or .txt file.
+            At least one of log_text or file_path must be provided.
+    """
+    result = _diagnose_errors(log_text=log_text, file_path=file_path)
+    return json.dumps(result, indent=2, default=str)
 
 
 # ---------------------------------------------------------------------------

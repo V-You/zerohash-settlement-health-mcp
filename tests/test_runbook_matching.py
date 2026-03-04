@@ -13,13 +13,18 @@ from zerohash_settlement_health.runbooks import (
 class TestRunbookLoading:
     def test_all_runbooks_loaded(self):
         runbooks = get_all_runbooks()
-        assert len(runbooks) == 5
+        assert len(runbooks) == 10
         expected_ids = {
             "insufficient_liquidity",
             "settlement_default",
             "counterparty_default",
             "stale_trade",
             "unknown_state",
+            "upstream_timeout",
+            "invalid_input",
+            "auth_failure",
+            "rate_limit",
+            "internal_error",
         }
         assert set(runbooks.keys()) == expected_ids
 

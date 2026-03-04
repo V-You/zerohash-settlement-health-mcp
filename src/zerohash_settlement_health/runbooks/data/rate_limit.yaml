@@ -1,0 +1,27 @@
+id: rate_limit
+title: "Rate Limit Exceeded"
+severity: MEDIUM
+trigger:
+  status_codes: [429]
+category: CLIENT_SIDE
+description: >
+  The client exceeded the API rate limit. Requests are being throttled
+  to protect system stability. The client should implement exponential
+  backoff and reduce request frequency.
+diagnosis_steps:
+  - "Identify the client and endpoint being rate-limited."
+  - "Check the client's recent request volume and frequency."
+  - "Determine if the rate limit is per-endpoint or global."
+  - "Check if the client is in a retry loop amplifying the problem."
+remediation:
+  - "Contact the client and advise implementing exponential backoff."
+  - "Share rate limit documentation and best practices."
+  - "If the client has a legitimate need for higher limits, escalate to Product."
+escalation_path: "Client (advise backoff)"
+api_references:
+  - "https://docs.zerohash.com/reference/rate-limits"
+draft_response_template: >
+  Hi {client_id}, your {endpoint} requests are being rate-limited
+  (observed at {timestamp} UTC). Please implement exponential backoff
+  in your integration. See our rate limit documentation for current
+  thresholds and best practices.

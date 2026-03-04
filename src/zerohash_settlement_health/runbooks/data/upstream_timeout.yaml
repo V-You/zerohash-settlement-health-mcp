@@ -1,0 +1,28 @@
+id: upstream_timeout
+title: "Upstream Provider Timeout"
+severity: HIGH
+trigger:
+  status_codes: [503]
+category: SERVER_SIDE
+description: >
+  An upstream liquidity provider or dependency timed out before
+  responding. The client's request was valid but could not be
+  fulfilled due to a server-side dependency failure.
+diagnosis_steps:
+  - "Identify the upstream provider from the error message."
+  - "Check the provider's status page for outages."
+  - "Check internal monitoring for connectivity issues."
+  - "Determine blast radius: how many clients are affected?"
+  - "Check if this has happened before and how it was resolved."
+remediation:
+  - "Escalate to DevOps / Engineering to verify connectivity."
+  - "If provider is globally down, prepare client-facing status update."
+  - "If resolved, confirm recovery and update incident log."
+escalation_path: "DevOps / Engineering"
+api_references:
+  - "POST /liquidity/rfq"
+draft_response_template: >
+  Hi {client_id}, we identified a temporary issue with one of our
+  upstream providers at {timestamp} UTC that caused your {endpoint}
+  request to fail. The issue has been escalated internally and we
+  are monitoring. No action is needed on your side.

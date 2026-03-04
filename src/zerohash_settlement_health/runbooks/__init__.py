@@ -21,12 +21,16 @@ _runbooks: dict[str, dict[str, Any]] = {}
 # Lookup table: (trade_state, settlement_state) -> runbook id
 _trigger_index: dict[tuple[str, str], str] = {}
 
+# Lookup table: status_code -> runbook id (for error-log-based runbooks)
+_status_code_index: dict[int, str] = {}
+
 
 def _load_runbooks() -> None:
     """Load all YAML runbook files from the data directory."""
-    global _runbooks, _trigger_index
+    global _runbooks, _trigger_index, _status_code_index
     _runbooks = {}
     _trigger_index = {}
+    _status_code_index = {}
 
     for yaml_file in sorted(_RUNBOOKS_DIR.glob("*.yaml")):
         with open(yaml_file) as f:
@@ -42,6 +46,10 @@ def _load_runbooks() -> None:
         if ts != "*" and ss != "*":
             _trigger_index[(ts, ss)] = runbook_id
 
+        # Build status code index for error-log runbooks
+        for code in trigger.get("status_codes", []):
+            _status_code_index[code] = runbook_id
+
 
 def get_all_runbooks() -> dict[str, dict[str, Any]]:
     """Return all loaded runbooks."""
@@ -55,6 +63,16 @@ def get_runbook(runbook_id: str) -> Optional[dict[str, Any]]:
     if not _runbooks:
         _load_runbooks()
     return _runbooks.get(runbook_id)
+
+
+def match_error_runbook(status_code: int) -> Optional[dict[str, Any]]:
+    """Find the runbook matching a given HTTP status code."""
+    if not _runbooks:
+        _load_runbooks()
+    runbook_id = _status_code_index.get(status_code)
+    if runbook_id:
+        return _runbooks[runbook_id]
+    return None
 
 
 def match_runbook(

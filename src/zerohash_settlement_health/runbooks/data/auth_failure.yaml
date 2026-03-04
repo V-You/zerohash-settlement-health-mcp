@@ -1,0 +1,29 @@
+id: auth_failure
+title: "Authentication / Authorization Failure"
+severity: MEDIUM
+trigger:
+  status_codes: [401, 403]
+category: CLIENT_SIDE
+description: >
+  The client's request was rejected due to missing, invalid, or
+  insufficient credentials. A 401 indicates no valid authentication
+  was provided. A 403 indicates the credentials are valid but lack
+  permission for the requested resource — this can occasionally
+  indicate a server-side permissions misconfiguration.
+diagnosis_steps:
+  - "Identify whether the error is 401 (no auth) or 403 (insufficient permissions)."
+  - "Check if the client's API key is active and not expired."
+  - "For 403: verify whether the participant has access to the requested resource."
+  - "Check if a recent permissions change or deployment may have caused this."
+remediation:
+  - "Contact the client to verify their API credentials."
+  - "For 403: check internal ACL configuration if the client's credentials are valid."
+  - "If a server-side misconfiguration is confirmed, escalate to Engineering."
+escalation_path: "Client (check credentials) / Engineering (if 403 misconfiguration)"
+api_references:
+  - "https://docs.zerohash.com/reference/api-authentication"
+draft_response_template: >
+  Hi {client_id}, your {endpoint} request at {timestamp} UTC was
+  rejected due to an authentication error. Please verify your API
+  credentials are current and have the required permissions. See our
+  authentication guide for details.
