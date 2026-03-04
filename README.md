@@ -4,9 +4,10 @@ This is an MCP server for the command line. It takes a **trade\_id**, queries th
 
  The MCP server encodes zerohash's settlement logic and API runbooks. A technical support engineer (TSE) can diagnose 'Trade & Transact' issues in seconds, directly in the terminal where they are already viewing logs. Using [mcp-cli](https://github.com/IBM/mcp-cli) for interactive LLM-powered chat, or `fastmcp` for instant tool invocation with no setup required. 
  
- | mcp-cli: <br>*Check trade_002* | mcp-cli: <br>*Check trade_002+* | Non-LLM trade_id query <br> and piped query | uv run fastmcp <br>dev inspector |
-| :---: | :---: | :---: | :---: |
-| <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_231051.png" width="99px" /></kbd>  |<kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008_.png" width="99px" /></kbd> |
+ | mcp-cli: <br>*Check trade_002* | mcp-cli: <br>*Check trade_002+* | Non-LLM trade_id query <br> and piped query | uv run fastmcp <br>dev inspector | mcp-cli: <br>Check these logs: |
+| :---: | :---: | :---: | :---: | :---: |
+| <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_231051.png" width="99px" /></kbd>  | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008_.png" width="99px" /></kbd> | 
+<kbd><img src="img/Screenshot_2026-03-04_170028.png" width="99px" /></kbd> |
 
 Advantages:
 
