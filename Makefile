@@ -4,7 +4,7 @@ SHELL := /bin/bash
 
 encrypt-tse: check-deps
 	@if [ -z "$(PASSWORD)" ]; then read -sp "Password: " PASS && echo; else PASS="$(PASSWORD)"; fi && \
-	mkdir -p html && \
+	mkdir -p docs && \
 	.venv/bin/grip --export TSE-IQ_2026-03-03.md index.reg.html && \
 	python3 -c "\
 import re; \
