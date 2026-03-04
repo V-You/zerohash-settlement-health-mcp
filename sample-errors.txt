@@ -1,0 +1,7 @@
+[14:38:01] INFO: Received POST /liquidity/rfq from Client_882 (IP: 192.168.1.1) 
+[14:38:01] ERROR: Upstream liquidity provider 'PrimeX' timed out after 5000ms. 
+[14:38:01] DEBUG: Returning 503 Service Unavailable to Client_882. 
+
+[14:42:10] INFO: Received POST /withdrawals from Client_882 (IP: 192.168.1.1) 
+[14:42:10] WARN: Validation failed for field 'asset_amount'. Expected: DECIMAL, Received: STRING ("ten_btc"). 
+[14:42:10] DEBUG: Returning 400 Bad Request - {"message": "Invalid data"} to Client_882. 
