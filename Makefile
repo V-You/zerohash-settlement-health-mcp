@@ -5,13 +5,13 @@ SHELL := /bin/bash
 encrypt-tse: check-deps
 	@if [ -z "$(PASSWORD)" ]; then read -sp "Password: " PASS && echo; else PASS="$(PASSWORD)"; fi && \
 	mkdir -p html && \
-	.venv/bin/grip --export TSE-IQ_2026-03-03.md TSE-IQ_2026-03-03.html && \
-	npx staticrypt TSE-IQ_2026-03-03.html \
+	.venv/bin/grip --export TSE-IQ_2026-03-03.md index.reg.html && \
+	npx staticrypt index.reg.html \
 	  --password "$$PASS" \
-	  -d html && \
-	mv html/TSE-IQ_2026-03-03.html html/TSE-IQ_2026-03-03.enc.html && \
-	rm TSE-IQ_2026-03-03.html
-	@echo "Done → html/TSE-IQ_2026-03-03.enc.html"
+	  -d docs/TSE-IQ_20260303 && \
+	mv docs/TSE-IQ_20260303/index.reg.html docs/TSE-IQ_20260303/index.html && \
+	rm index.reg.html
+	@echo "Done → docs/TSE-IQ_20260303/index.html"
 
 check-deps:
 	@test -f .venv/bin/grip || \
