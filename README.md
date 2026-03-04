@@ -16,7 +16,7 @@ Advantages:
 * **Chat for complex analysis:** Switch to `mcp-cli chat` for multi-step analysis: "Check settlement health for trade\_005 and then verify the participant's account balance" – the AI chains the applicable MCP tools and returns a unified answer.
 * **Multi-provider support:** `mcp-cli` supports Groq, Gemini, OpenAI, Anthropic, and Ollama – not locked into one model.
 
-# Setup
+## Setup
 
 Requires: Python 3.11+, [uv](https://docs.astral.sh/uv/)
 
@@ -26,9 +26,9 @@ cd zerohash-settlement-health-mcp
 uv sync --extra dev
 ```
 
-# Usage
+## Usage
 
-## Direct tool calls (no LLM)
+### Direct tool calls (no LLM)
 
 ```bash
 # List available tools
@@ -47,7 +47,7 @@ uv run fastmcp dev inspector src/zerohash_settlement_health/server.py
 
 ```
 
-## LLM chat (mcp-cli)
+### LLM chat (mcp-cli)
 
 ```bash
 # Copy .env to project folder
@@ -70,7 +70,45 @@ Supported providers: groq, gemini, openai, anthropic, ollama. **Keys:** Add GROQ
 - `trade_003` (counterparty default)
 - `trade_004`–`trade_008` (various states)
 
-
-# Workflow
+## Workflow notes
 
 **Execution:** The CLI client sends a `call_tool` request to the server process. The server queries the Zero Hash API (or mock), maps the trade state to a runbook, and returns a structured diagnosis to the terminal. 
+
+---
+
+*TSE-IQ tools (added 2026-03-03)*
+
+## Market prices
+
+The `get_market_prices` tool fetches [live crypto prices from CoinGecko](https://www.coingecko.com/en/api) (free tier, no key): BTC, ETH, SOL. 
+
+**Price enrichment:** The existing `check_account_balance` and `check_settlement_health` tools are automatically enriched with live market data. Account balances show `price_usd` and `value_usd` fields; health checks include a `market_context` comparing the trade price to the current market price.
+
+**Error logging:** Set `MARKET_PRICE_ERROR_LOG=true` in `.env` to record CoinGecko API errors (with timestamps) to `market_errors.log`. This lets other tools or a TSE detect API downtime patterns. Disabled by default.
+
+
+### Direct tool calls (no LLM)
+
+```bash
+# Get current prices for BTC, ETH, SOL
+uv run fastmcp call src/zerohash_settlement_health/server.py --target get_market_prices
+
+# Single asset
+uv run fastmcp call src/zerohash_settlement_health/server.py --target get_market_prices assets=BTC
+
+# Custom set
+uv run fastmcp call src/zerohash_settlement_health/server.py --target get_market_prices assets=BTC,ETH,DOGE,SOL
+```
+
+### LLM chat (mcp-cli)
+
+- "What are the current prices for BTC, ETH, and SOL?"
+- "Check settlement health for trade_002 and show me the current market prices"
+
+## Future considerations
+
+- **Symbol mapping:** Fallback to CoinGecko's `/search` to support more asset symbols.
+- **Rate limiting / caching:** CoinGecko allows ~30/min. Add 30s in-memory TTL cache (as chat-mode may hit limit).
+- **Error log rotation:** `market_errors.log` is append-only. Add rotation.
+- **CoinGecko Pro tier:** If needed, add `COINGECKO_API_KEY` to `.env`, send `x-cg-demo-api-key` header.
+

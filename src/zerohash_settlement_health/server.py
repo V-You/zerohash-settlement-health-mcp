@@ -31,6 +31,9 @@ from zerohash_settlement_health.tools.check_account_balance import (
 from zerohash_settlement_health.tools.check_settlement_health import (
     check_settlement_health as _check_settlement_health,
 )
+from zerohash_settlement_health.tools.get_market_prices import (
+    get_market_prices as _get_market_prices,
+)
 from zerohash_settlement_health.tools.lookup_trade import (
     lookup_trade as _lookup_trade,
 )
@@ -70,7 +73,10 @@ def check_settlement_health(
         participant_code: Optional. If provided, also checks account balance
             and enriches the diagnosis. Validated against the trade's participant.
     """
-    result = _check_settlement_health(_data_source, trade_id, participant_code)
+    result = _check_settlement_health(
+        _data_source, trade_id, participant_code,
+        error_log_enabled=_settings.market_price_error_log,
+    )
     return json.dumps(result, indent=2)
 
 
@@ -103,7 +109,29 @@ def check_account_balance(
         participant_code: The participant code to look up.
         asset: Optional asset filter (e.g., "BTC", "USD").
     """
-    result = _check_account_balance(_data_source, participant_code, asset)
+    result = _check_account_balance(
+        _data_source, participant_code, asset,
+        error_log_enabled=_settings.market_price_error_log,
+    )
+    return json.dumps(result, indent=2)
+
+
+@mcp.tool
+def get_market_prices(
+    assets: str = "BTC,ETH,SOL",
+    vs_currency: str = "usd",
+) -> str:
+    """Get current market prices for crypto assets.
+
+    Fetches real-time prices from CoinGecko (free, no API key required).
+    Useful for contextualizing trade values and account balances during
+    settlement investigations.
+
+    Args:
+        assets: Comma-separated asset symbols (e.g., "BTC,ETH,SOL").
+        vs_currency: Quote currency for prices (default: "usd").
+    """
+    result = _get_market_prices(assets, vs_currency, _settings.market_price_error_log)
     return json.dumps(result, indent=2)
 
 

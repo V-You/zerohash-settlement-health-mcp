@@ -24,6 +24,9 @@ class Settings:
     # Logging
     log_level: str = "INFO"
 
+    # Market prices
+    market_price_error_log: bool = False
+
 
 def load_settings() -> Settings:
     """Load settings from .env file and environment variables."""
@@ -40,4 +43,5 @@ def load_settings() -> Settings:
             "ZEROHASH_API_BASE_URL", "https://api.cert.zerohash.com"
         ),
         log_level=os.getenv("LOG_LEVEL", "INFO").upper(),
+        market_price_error_log=os.getenv("MARKET_PRICE_ERROR_LOG", "false").lower() == "true",
     )

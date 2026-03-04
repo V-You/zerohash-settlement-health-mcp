@@ -1,6 +1,7 @@
 """Data models for the zerohash Settlement Health MCP server."""
 
 from zerohash_settlement_health.models.account import Account, AccountBalanceResult
+from zerohash_settlement_health.models.market import MarketPrice, MarketPriceResult
 from zerohash_settlement_health.models.trade import (
     ErrorResponse,
     HealthCheckResult,
@@ -17,6 +18,8 @@ __all__ = [
     "ErrorResponse",
     "HealthCheckResult",
     "HealthStatus",
+    "MarketPrice",
+    "MarketPriceResult",
     "Severity",
     "SettlementState",
     "Trade",

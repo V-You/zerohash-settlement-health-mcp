@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from zerohash_settlement_health.data_source.base import DataSource
+from zerohash_settlement_health.market_data import fetch_prices
 from zerohash_settlement_health.models import (
     ErrorResponse,
     HealthCheckResult,
@@ -31,6 +32,7 @@ def check_settlement_health(
     data_source: DataSource,
     trade_id: str,
     participant_code: Optional[str] = None,
+    error_log_enabled: bool = False,
 ) -> dict:
     """Perform a settlement health diagnostic on a trade.
 
@@ -39,6 +41,7 @@ def check_settlement_health(
         trade_id: The trade ID to diagnose.
         participant_code: Optional participant code. If provided, validates
             against the trade and enriches the diagnosis with balance info.
+        error_log_enabled: Whether to log price API errors to file.
 
     Returns:
         A dict representing either a HealthCheckResult or an ErrorResponse.
@@ -93,6 +96,29 @@ def check_settlement_health(
             )
             diagnosis += f" Participant balances: [{balance_summary}]."
 
+    # 7. Enrich with market context
+    market_context = None
+    base_asset = trade.symbol.split("/")[0] if "/" in trade.symbol else trade.symbol
+    prices = fetch_prices([base_asset], error_log_enabled=error_log_enabled)
+    if base_asset.upper() in prices:
+        current_price = float(prices[base_asset.upper()].price_usd)
+        trade_price = float(trade.trade_price)
+        if trade_price > 0:
+            diff_pct = ((current_price - trade_price) / trade_price) * 100
+            sign = "+" if diff_pct >= 0 else ""
+            market_context = {
+                "asset": base_asset.upper(),
+                "current_price_usd": prices[base_asset.upper()].price_usd,
+                "trade_price": trade.trade_price,
+                "price_diff_pct": f"{sign}{diff_pct:.2f}",
+            }
+        else:
+            market_context = {
+                "asset": base_asset.upper(),
+                "current_price_usd": prices[base_asset.upper()].price_usd,
+                "trade_price": trade.trade_price,
+            }
+
     return HealthCheckResult(
         trade_id=trade_id,
         status=status,
@@ -103,6 +129,7 @@ def check_settlement_health(
         action=action,
         runbook_ref=runbook_ref,
         severity=severity,
+        market_context=market_context,
         timestamp=datetime.now(timezone.utc),
     ).model_dump(mode="json")
 

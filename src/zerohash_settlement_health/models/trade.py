@@ -83,6 +83,7 @@ class HealthCheckResult(BaseModel):
     action: str
     runbook_ref: Optional[str] = None
     severity: Severity
+    market_context: Optional[dict] = Field(default=None, description="Live market price context for the trade's asset")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
     model_config = {"use_enum_values": True}
