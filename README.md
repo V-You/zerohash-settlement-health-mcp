@@ -24,6 +24,16 @@ Requires: Python 3.11+, [uv](https://docs.astral.sh/uv/)
 git clone https://github.com/V-You/zerohash-settlement-health-mcp
 cd zerohash-settlement-health-mcp
 uv sync --extra dev
+
+# ~100 MB
+```
+
+For LLM chat mode (`mcp-cli`), also install the `chat` extra:
+
+```bash
+uv sync --extra dev --extra chat
+
+# ~400 MB
 ```
 
 ## Usage
