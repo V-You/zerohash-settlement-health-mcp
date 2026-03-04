@@ -13,6 +13,8 @@ c = re.sub(r'(<a\b)(\s)', r'\1 target=\"_blank\" rel=\"noopener noreferrer\"\2',
 c = re.sub(r'(<a\b)(>)', r'\1 target=\"_blank\" rel=\"noopener noreferrer\"\2', c); \
 c = re.sub(r'(<summary>)(.*?)(</summary>)', lambda m: m.group(1) + re.sub(r'<strong>(.*?)</strong>', r'<strong><u>\1</u></strong>', m.group(2)) + m.group(3), c, flags=re.DOTALL); \
 c = re.sub(r'(<a\b[^>]*>)(.*?)(</a>)', r'\1<u>\2</u>\3', c, flags=re.DOTALL); \
+hljs = '<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css\"><script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\"></script><script>hljs.highlightAll();</script>'; \
+c = c.replace('</head>', hljs + '</head>', 1); \
 open('index.reg.html','w').write(c); \
 " && \
 	npx staticrypt index.reg.html \
