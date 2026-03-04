@@ -6,8 +6,7 @@ This is an MCP server for the command line. It takes a **trade\_id**, queries th
  
  | mcp-cli: <br>*Check trade_002* | mcp-cli: <br>*Check trade_002+* | Non-LLM trade_id query <br> and piped query | uv run fastmcp <br>dev inspector | mcp-cli: <br>Check these logs: |
 | :---: | :---: | :---: | :---: | :---: |
-| <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_231051.png" width="99px" /></kbd>  | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008_.png" width="99px" /></kbd> | 
-<kbd><img src="img/Screenshot_2026-03-04_170028.png" width="99px" /></kbd> |
+| <kbd><img src="img/Screenshot_2026-03-02_223019.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_231051.png" width="99px" /></kbd>  | <kbd><img src="img/Screenshot_2026-03-02_222027.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-02_221008_.png" width="99px" /></kbd> | <kbd><img src="img/Screenshot_2026-03-04_170028.png" width="99px" /></kbd> |
 
 Advantages:
 
